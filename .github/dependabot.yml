@@ -1,0 +1,44 @@
+# Dependabot configuration for automated security updates
+version: 2
+updates:
+  # Enable version updates for npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    assignees:
+      - "mrtlhfr"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "dev-deps"
+      include: "scope"
+    # Allow all dependency updates
+    allow:
+      - dependency-type: "all"
+    # Group updates by dependency type
+    groups:
+      patches:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+      development-dependencies:
+        patterns:
+          - "*"
+        dependency-type: "development"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    assignees:
+      - "mrtlhfr"
+    commit-message:
+      prefix: "ci"
+      include: "scope"

@@ -11,7 +11,10 @@
     "build": "node scripts/build.js",
     "build:serve": "npm run build && npm start",
     "preview": "npx http-server . -p 3000 -c-1 -o kindle-notes-web-app.html",
-    "test": "echo 'No tests configured'"
+    "test": "echo 'No tests configured'",
+    "security:audit": "npm audit",
+    "security:fix": "npm audit fix",
+    "security:check": "npm audit --audit-level moderate"
   },
   "keywords": [
     "kindle",
@@ -26,7 +29,7 @@
   "license": "MIT",
   "devDependencies": {
     "http-server": "^14.1.1",
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.0"
   },
   "engines": {
     "node": ">=14.0.0"
