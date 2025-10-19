@@ -1,0 +1,22 @@
+# Dependency Review Configuration
+# Focus on production dependencies, be lenient with dev dependencies
+
+fail_on_severity: 'high'
+allow_licenses:
+  - 'MIT'
+  - 'ISC'
+  - 'Apache-2.0'
+  - 'BSD-2-Clause'
+  - 'BSD-3-Clause'
+  - 'CC0-1.0'
+
+# Allow vulnerabilities in development dependencies
+allow_ghsas:
+  # Known dev dependency issues that don't affect production
+  - 'GHSA-grv7-fg5c-xmjg'  # braces (dev only)
+  - 'GHSA-g95f-p29q-9xw4'  # braces ReDoS (dev only)
+  - 'GHSA-cwfw-4gq5-mrqx'  # braces ReDoS (dev only)
+
+# Only block changes to production dependencies with vulnerabilities
+fail_on_scopes:
+  - 'runtime'

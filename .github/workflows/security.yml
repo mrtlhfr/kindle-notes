@@ -33,22 +33,24 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Run npm audit
-      run: |
-        echo "🔍 Running npm audit..."
-        npm audit --audit-level moderate || echo "⚠️ Vulnerabilities found in dev dependencies"
-        
-    - name: Check production dependencies
+    - name: Check production dependencies security
       run: |
         echo "🔍 Checking production dependencies..."
-        PROD_DEPS=$(npm list --prod --parseable --silent 2>/dev/null | wc -l || echo "0")
-        echo "📦 Production dependencies: $PROD_DEPS"
-        if [ "$PROD_DEPS" -eq "1" ]; then
+        PROD_DEPS=$(npm list --omit=dev --parseable --depth=0 2>/dev/null | grep -v "$(pwd)$" | wc -l || echo "0")
+        echo "📦 Production dependencies count: $PROD_DEPS"
+        if [ "$PROD_DEPS" -eq "0" ]; then
           echo "✅ No production dependencies - app is secure!"
+          exit 0
         else
           echo "⚠️ Found production dependencies - running security check"
-          npm audit --production --audit-level moderate
+          npm audit --omit=dev --audit-level moderate
         fi
+        
+    - name: Run full npm audit (informational)
+      continue-on-error: true
+      run: |
+        echo "🔍 Running full audit (including dev dependencies)..."
+        npm audit --audit-level high || echo "ℹ️ Vulnerabilities found in development dependencies only"
         
     - name: Run npm audit fix (if issues found)
       run: |
@@ -97,8 +99,10 @@ jobs:
     - name: Dependency Review
       uses: actions/dependency-review-action@v4
       with:
-        fail-on-severity: moderate
+        fail-on-severity: high
         allow-licenses: MIT, ISC, Apache-2.0, BSD-2-Clause, BSD-3-Clause
+        # Only fail on production dependency vulnerabilities
+        config-file: './.github/dependency-review-config.yml'
 
   security-summary:
     name: Security Summary

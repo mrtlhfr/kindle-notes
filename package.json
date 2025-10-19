@@ -14,7 +14,8 @@
     "test": "echo 'No tests configured'",
     "security:audit": "npm audit",
     "security:fix": "npm audit fix",
-    "security:check": "npm audit --audit-level moderate"
+    "security:check": "npm audit --audit-level moderate",
+    "security:prod": "npm audit --omit=dev --audit-level moderate"
   },
   "keywords": [
     "kindle",
