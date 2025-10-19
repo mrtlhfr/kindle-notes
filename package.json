@@ -1,0 +1,43 @@
+{
+  "name": "kindle-notes-parser",
+  "version": "1.0.0",
+  "description": "A web-based Kindle notes parser that organizes your highlights and notes",
+  "main": "kindle-notes-web-app.html",
+  "scripts": {
+    "start": "npx http-server . -p 8081 -c-1 -o kindle-notes-web-app.html",
+    "serve": "npx http-server . -p 8081 -c-1",
+    "dev": "npx http-server src -p 8081 -c-1 -o index.html",
+    "dev:watch": "npx live-server src --port=8081 --no-css-inject --entry-file=index.html",
+    "build": "node scripts/build.js",
+    "build:serve": "npm run build && npm start",
+    "preview": "npx http-server . -p 3000 -c-1 -o kindle-notes-web-app.html",
+    "test": "echo 'No tests configured'"
+  },
+  "keywords": [
+    "kindle",
+    "notes",
+    "parser",
+    "highlights",
+    "reading",
+    "spa",
+    "javascript"
+  ],
+  "author": "Martin Lehofer",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrtlhfr/kindle-notes.git"
+  },
+  "homepage": "./kindle-notes-web-app.html",
+  "browserslist": [
+    "defaults",
+    "not ie < 11"
+  ]
+}

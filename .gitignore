@@ -1,0 +1,47 @@
+# macOS
+.DS_Store
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime files
+*.log
+
+# User data files (Kindle exports - keep private)
+my-clippings*.txt
+My\ Clippings.txt
+*.clippings
+
+# Generated/Built files
+dist/
+build/
+coverage/
+
+# Production build (uncomment to ignore built file)
+# kindle-notes-web-app.html
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# Temporary files
+.tmp/
+.cache/
+*.tmp
+*.temp
+
+# Runtime and test files
+.nyc_output/
+test-results/

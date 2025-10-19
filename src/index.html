@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kindle Notes Parser - Web App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="main-title">📚 Kindle Notes Parser</h1>
+            <p class="subtitle">Upload your My Clippings.txt file to organize your highlights and notes</p>
+        </div>
+
+        <!-- File Upload Area -->
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Drop your My Clippings.txt file here</div>
+            <div class="upload-subtext">or click to browse for files</div>
+            <input type="file" id="fileInput" accept=".txt" />
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Parsing your Kindle notes...</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-card" id="statsCard">
+            <h3 style="margin-bottom: 20px; text-align: center; color: #2c3e50;">📊 Your Reading Statistics</h3>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats will be populated here -->
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls" id="controls">
+            <div class="controls-row">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search books, authors, or content...">
+                <select class="filter-select" id="typeFilter">
+                    <option value="all">All Types</option>
+                    <option value="Highlight">Highlights Only</option>
+                    <option value="Bookmark">Bookmarks Only</option>
+                    <option value="Note">Notes Only</option>
+                </select>
+                <button class="btn" id="exportAllBtn">Export All</button>
+                <button class="btn btn-secondary" id="resetBtn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="results" id="results">
+            <div class="books-grid" id="booksGrid">
+                <!-- Books will be populated here -->
+            </div>
+        </div>
+
+        <!-- Notes View -->
+        <div class="notes-view" id="notesView">
+            <button class="btn back-btn" id="backBtn">← Back to Books</button>
+            <div class="notes-header" id="notesHeader">
+                <!-- Book details will be shown here -->
+            </div>
+            <div id="notesContainer">
+                <!-- Notes will be shown here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/models.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

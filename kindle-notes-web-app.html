@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kindle Notes Parser - Web App</title>
+    <style>
+/* 
+ * Kindle Notes Parser - Styles
+ * Modern, responsive CSS for the web application
+ */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.main-title {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.2em;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+/* File Upload Area */
+.upload-area {
+    border: 3px dashed #3498db;
+    border-radius: 12px;
+    padding: 60px 40px;
+    text-align: center;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    background: white;
+    cursor: pointer;
+}
+
+.upload-area:hover, .upload-area.dragover {
+    border-color: #2980b9;
+    background-color: #f8f9fa;
+    transform: scale(1.02);
+}
+
+.upload-icon {
+    font-size: 4em;
+    color: #3498db;
+    margin-bottom: 20px;
+}
+
+.upload-text {
+    font-size: 1.3em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.upload-subtext {
+    color: #7f8c8d;
+    font-size: 1em;
+}
+
+#fileInput {
+    display: none;
+}
+
+/* Loading Animation */
+.loading {
+    display: none;
+    text-align: center;
+    padding: 40px;
+}
+
+.spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Statistics Card */
+.stats-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    text-align: center;
+}
+
+.stat-item {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stat-number {
+    font-size: 2em;
+    font-weight: bold;
+    color: #3498db;
+    display: block;
+}
+
+.stat-label {
+    color: #7f8c8d;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Controls */
+.controls {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.controls-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    min-width: 250px;
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.filter-select {
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    background: white;
+    min-width: 150px;
+}
+
+.btn {
+    padding: 12px 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: #2980b9;
+}
+
+.btn-secondary {
+    background: #95a5a6;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+.btn-success {
+    background: #27ae60;
+}
+
+.btn-success:hover {
+    background: #219a52;
+}
+
+/* Results */
+.results {
+    display: none;
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.book-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s, shadow 0.3s;
+    border-left: 5px solid #3498db;
+    cursor: pointer;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.book-title {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.book-author {
+    color: #7f8c8d;
+    font-style: italic;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.book-stats {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9em;
+    color: #7f8c8d;
+}
+
+.book-stat {
+    background: #ecf0f1;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+/* Notes View */
+.notes-view {
+    display: none;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.notes-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.back-btn {
+    margin-bottom: 20px;
+}
+
+.note {
+    background: #f8f9fa;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 5px solid #3498db;
+    transition: box-shadow 0.3s;
+}
+
+.note:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.note.bookmark {
+    border-left-color: #e74c3c;
+}
+
+.note.note-type {
+    border-left-color: #f39c12;
+}
+
+.note-meta {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.note-type-badge {
+    background: #3498db;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.note-type-badge.bookmark {
+    background: #e74c3c;
+}
+
+.note-type-badge.note {
+    background: #f39c12;
+}
+
+.note-content {
+    font-size: 1.1em;
+    line-height: 1.7;
+    color: #2c3e50;
+}
+
+.empty-note {
+    font-style: italic;
+    color: #95a5a6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .main-title {
+        font-size: 2em;
+    }
+
+    .upload-area {
+        padding: 40px 20px;
+    }
+
+    .upload-icon {
+        font-size: 3em;
+    }
+
+    .controls-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .books-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .note-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Utility Classes */
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.copy-success {
+    background: #27ae60 !important;
+    animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="main-title">📚 Kindle Notes Parser</h1>
+            <p class="subtitle">Upload your My Clippings.txt file to organize your highlights and notes</p>
+        </div>
+
+        <!-- File Upload Area -->
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Drop your My Clippings.txt file here</div>
+            <div class="upload-subtext">or click to browse for files</div>
+            <input type="file" id="fileInput" accept=".txt" />
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Parsing your Kindle notes...</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-card" id="statsCard">
+            <h3 style="margin-bottom: 20px; text-align: center; color: #2c3e50;">📊 Your Reading Statistics</h3>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats will be populated here -->
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls" id="controls">
+            <div class="controls-row">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search books, authors, or content...">
+                <select class="filter-select" id="typeFilter">
+                    <option value="all">All Types</option>
+                    <option value="Highlight">Highlights Only</option>
+                    <option value="Bookmark">Bookmarks Only</option>
+                    <option value="Note">Notes Only</option>
+                </select>
+                <button class="btn" id="exportAllBtn">Export All</button>
+                <button class="btn btn-secondary" id="resetBtn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="results" id="results">
+            <div class="books-grid" id="booksGrid">
+                <!-- Books will be populated here -->
+            </div>
+        </div>
+
+        <!-- Notes View -->
+        <div class="notes-view" id="notesView">
+            <button class="btn back-btn" id="backBtn">← Back to Books</button>
+            <div class="notes-header" id="notesHeader">
+                <!-- Book details will be shown here -->
+            </div>
+            <div id="notesContainer">
+                <!-- Notes will be shown here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+/**
+ * KindleNote Model
+ * Represents a single Kindle note/highlight/bookmark
+ */
+
+class KindleNote {
+    /**
+     * Create a new Kindle note
+     * @param {string} bookTitle - The title of the book
+     * @param {string} author - The author of the book
+     * @param {string} noteType - Type of note (Highlight, Bookmark, Note)
+     * @param {string} location - Location in the book
+     * @param {string|null} page - Page number (if available)
+     * @param {Date} dateAdded - When the note was created
+     * @param {string} content - The actual note content
+     */
+    constructor(bookTitle, author, noteType, location, page, dateAdded, content) {
+        this.bookTitle = bookTitle;
+        this.author = author;
+        this.noteType = noteType;
+        this.location = location;
+        this.page = page;
+        this.dateAdded = dateAdded;
+        this.content = content;
+    }
+
+    /**
+     * Get a string representation of the note
+     * @returns {string} Formatted note summary
+     */
+    toString() {
+        return `${this.bookTitle} - ${this.noteType} at ${this.location}: ${this.content.substring(0, 50)}...`;
+    }
+}
+
+
+
+/**
+ * KindleNotesParser
+ * Core parsing logic for Kindle "My Clippings.txt" files
+ */
+
+class KindleNotesParser {
+    constructor() {
+        this.notes = [];
+        this.books = {};
+    }
+
+    /**
+     * Parse the entire Kindle notes file content
+     * @param {string} content - Raw file content
+     */
+    parseFile(content) {
+        // Split by the separator
+        const entries = content.split('==========');
+        
+        this.notes = [];
+        this.books = {};
+
+        entries.forEach(entry => {
+            const trimmedEntry = entry.trim();
+            if (!trimmedEntry) return;
+
+            const note = this.parseEntry(trimmedEntry);
+            if (note) {
+                this.notes.push(note);
+                
+                if (!this.books[note.bookTitle]) {
+                    this.books[note.bookTitle] = [];
+                }
+                this.books[note.bookTitle].push(note);
+            }
+        });
+    }
+
+    /**
+     * Parse a single entry from the clippings file
+     * @param {string} entry - Single note entry
+     * @returns {KindleNote|null} Parsed note or null if invalid
+     */
+    parseEntry(entry) {
+        const lines = entry.split('\n').map(line => line.trim()).filter(line => line);
+        
+        if (lines.length < 2) {
+            return null;
+        }
+
+        // Parse book title and author
+        const [bookTitle, author] = this.parseTitleAuthor(lines[0]);
+
+        // Parse metadata line
+        const [noteType, location, page, dateAdded] = this.parseMetadata(lines[1]);
+
+        // Extract content (everything after the metadata line)
+        const content = lines.slice(2).join('\n');
+
+        return new KindleNote(bookTitle, author, noteType, location, page, dateAdded, content);
+    }
+
+    /**
+     * Parse book title and author from title line
+     * @param {string} titleLine - First line of entry
+     * @returns {Array} [bookTitle, author]
+     */
+    parseTitleAuthor(titleLine) {
+        // Remove BOM character if present
+        titleLine = titleLine.replace(/^\ufeff/, '');
+
+        // Pattern: "Book_Title (Author Name)"
+        const match = titleLine.match(/^(.+?)\s*\(([^)]+)\)$/);
+        if (match) {
+            return [match[1].trim(), match[2].trim()];
+        } else {
+            // Fallback if pattern doesn't match
+            return [titleLine, "Unknown"];
+        }
+    }
+
+    /**
+     * Parse metadata line to extract note information
+     * @param {string} metadataLine - Second line of entry
+     * @returns {Array} [noteType, location, page, dateAdded]
+     */
+    parseMetadata(metadataLine) {
+        // Default values
+        let noteType = "Unknown";
+        let location = "";
+        let page = null;
+        let dateAdded = new Date();
+
+        // Extract note type
+        if (metadataLine.includes("Highlight")) {
+            noteType = "Highlight";
+        } else if (metadataLine.includes("Bookmark")) {
+            noteType = "Bookmark";
+        } else if (metadataLine.includes("Note")) {
+            noteType = "Note";
+        }
+
+        // Extract location
+        const locationMatch = metadataLine.match(/Location (\d+(?:-\d+)?)/);
+        if (locationMatch) {
+            location = locationMatch[1];
+        }
+
+        // Extract page
+        const pageMatch = metadataLine.match(/page (\d+)/);
+        if (pageMatch) {
+            page = pageMatch[1];
+        }
+
+        // Extract date
+        const dateMatch = metadataLine.match(/Added on (.+?)$/);
+        if (dateMatch) {
+            const dateStr = dateMatch[1];
+            try {
+                // Try different date formats
+                dateAdded = new Date(dateStr);
+                if (isNaN(dateAdded)) {
+                    // Try parsing specific Kindle format
+                    const kindleDate = this.parseKindleDate(dateStr);
+                    dateAdded = kindleDate || new Date();
+                }
+            } catch (e) {
+                dateAdded = new Date();
+            }
+        }
+
+        return [noteType, location, page, dateAdded];
+    }
+
+    /**
+     * Parse Kindle-specific date format
+     * @param {string} dateStr - Date string from Kindle
+     * @returns {Date|null} Parsed date or null
+     */
+    parseKindleDate(dateStr) {
+        // Handle Kindle date format: "Tuesday, April 1, 2025 4:47:55 PM"
+        try {
+            return new Date(dateStr);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    /**
+     * Clean and beautify book title for display
+     * @param {string} bookTitle - Raw book title
+     * @param {string} author - Book author
+     * @returns {string} Cleaned title
+     */
+    cleanBookTitle(bookTitle, author) {
+        let cleanTitle = bookTitle;
+
+        // Remove common prefixes
+        cleanTitle = cleanTitle.replace(/^vdoc\.?pub_?/i, '');
+        cleanTitle = cleanTitle.replace(/^dokumen\.?pub_?/i, '');
+
+        // Remove long numbers (over 5 digits)
+        cleanTitle = cleanTitle.replace(/\b\d{6,}\b/g, '');
+
+        // Replace underscores and hyphens with spaces
+        cleanTitle = cleanTitle.replace(/[-_]+/g, ' ');
+
+        // Remove extra whitespace
+        cleanTitle = cleanTitle.replace(/\s+/g, ' ').trim();
+
+        // Remove author name from title if it appears at the end
+        if (author && author.trim()) {
+            const authorWords = author.trim().split(/\s+/);
+            
+            // Remove full author name
+            const authorPattern = new RegExp('\\b' + this.escapeRegex(author.trim()) + '\\b\\s*
+</html>, 'i');
+            cleanTitle = cleanTitle.replace(authorPattern, '').trim();
+            
+            // Remove individual author words
+            authorWords.forEach(word => {
+                if (word.length > 2) {
+                    const wordPattern = new RegExp('\\b' + this.escapeRegex(word) + '\\b\\s*
+</html>, 'i');
+                    cleanTitle = cleanTitle.replace(wordPattern, '').trim();
+                }
+            });
+
+            // Remove patterns like "(Author Name)"
+            cleanTitle = cleanTitle.replace(/\s*\([^)]*\)\s*$/g, '').trim();
+        }
+
+        // Clean up common suffixes
+        cleanTitle = cleanTitle.replace(/\s*(second edition|first edition|revised|updated)\s*$/i, '');
+
+        // Remove trailing dashes, underscores, or dots
+        cleanTitle = cleanTitle.replace(/[-_.]+$/, '').trim();
+
+        // Capitalize properly
+        if (cleanTitle) {
+            const words = cleanTitle.split(/\s+/);
+            const capitalizedWords = words.map((word, index) => {
+                const lowerWord = word.toLowerCase();
+                if (index === 0 || !['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'].includes(lowerWord)) {
+                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                }
+                return lowerWord;
+            });
+            cleanTitle = capitalizedWords.join(' ');
+        }
+
+        return cleanTitle || bookTitle;
+    }
+
+    /**
+     * Escape regex special characters
+     * @param {string} string - String to escape
+     * @returns {string} Escaped string
+     */
+    escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\<!-- JavaScript Modules -->
+    <script src="js/models.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/main.js"></script>
+</body>');
+    }
+
+    /**
+     * Sort notes by their location numbers
+     * @param {Array} notes - Array of notes to sort
+     * @returns {Array} Sorted notes
+     */
+    sortNotesByLocation(notes) {
+        return notes.sort((a, b) => {
+            const aLocation = this.extractLocationNumber(a.location);
+            const bLocation = this.extractLocationNumber(b.location);
+            return aLocation - bLocation;
+        });
+    }
+
+    /**
+     * Extract numeric location from location string
+     * @param {string} locationStr - Location string
+     * @returns {number} Numeric location
+     */
+    extractLocationNumber(locationStr) {
+        if (!locationStr) return 0;
+        const match = locationStr.match(/(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+    }
+
+    /**
+     * Get statistics about parsed notes
+     * @returns {Object} Statistics object
+     */
+    getStatistics() {
+        return {
+            totalNotes: this.notes.length,
+            totalBooks: Object.keys(this.books).length,
+            highlights: this.notes.filter(n => n.noteType === "Highlight").length,
+            bookmarks: this.notes.filter(n => n.noteType === "Bookmark").length,
+            notes: this.notes.filter(n => n.noteType === "Note").length
+        };
+    }
+
+    /**
+     * Search notes by query and type
+     * @param {string} query - Search query
+     * @param {string} typeFilter - Note type filter
+     * @returns {Array} Filtered notes
+     */
+    searchNotes(query, typeFilter = 'all') {
+        const lowerQuery = query.toLowerCase();
+        return this.notes.filter(note => {
+            const matchesQuery = !query || 
+                note.content.toLowerCase().includes(lowerQuery) ||
+                note.bookTitle.toLowerCase().includes(lowerQuery) ||
+                note.author.toLowerCase().includes(lowerQuery);
+            
+            const matchesType = typeFilter === 'all' || note.noteType === typeFilter;
+            
+            return matchesQuery && matchesType;
+        });
+    }
+
+    /**
+     * Get books grouped by search criteria
+     * @param {string} query - Search query
+     * @param {string} typeFilter - Note type filter
+     * @returns {Object} Books grouped by title
+     */
+    getBooksBySearch(query, typeFilter = 'all') {
+        const filteredNotes = this.searchNotes(query, typeFilter);
+        const bookGroups = {};
+        
+        filteredNotes.forEach(note => {
+            if (!bookGroups[note.bookTitle]) {
+                bookGroups[note.bookTitle] = [];
+            }
+            bookGroups[note.bookTitle].push(note);
+        });
+        
+        return bookGroups;
+    }
+}
+
+
+
+/**
+ * KindleNotesApp
+ * Main application class that handles UI interactions and file processing
+ */
+
+class KindleNotesApp {
+    constructor() {
+        this.parser = new KindleNotesParser();
+        this.initializeEventListeners();
+    }
+
+    /**
+     * Initialize all event listeners for the application
+     */
+    initializeEventListeners() {
+        // File upload events
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                this.handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                this.handleFile(e.target.files[0]);
+            }
+        });
+
+        // Search and filter events
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            this.filterBooks(e.target.value, document.getElementById('typeFilter').value);
+        });
+
+        document.getElementById('typeFilter').addEventListener('change', (e) => {
+            this.filterBooks(document.getElementById('searchBox').value, e.target.value);
+        });
+
+        // Button events
+        document.getElementById('backBtn').addEventListener('click', () => {
+            this.showBooksView();
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            this.reset();
+        });
+
+        document.getElementById('exportAllBtn').addEventListener('click', () => {
+            this.exportAllHighlights();
+        });
+    }
+
+    /**
+     * Handle file upload and processing
+     * @param {File} file - Selected file
+     */
+    async handleFile(file) {
+        if (!file.name.toLowerCase().endsWith('.txt')) {
+            alert('Please select a .txt file');
+            return;
+        }
+
+        this.showLoading();
+
+        try {
+            const content = await this.readFile(file);
+            this.parser.parseFile(content);
+            this.displayResults();
+        } catch (error) {
+            alert('Error reading file: ' + error.message);
+            this.hideLoading();
+        }
+    }
+
+    /**
+     * Read file content as text
+     * @param {File} file - File to read
+     * @returns {Promise<string>} File content
+     */
+    readFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject(new Error('Failed to read file'));
+            reader.readAsText(file, 'UTF-8');
+        });
+    }
+
+    /**
+     * Show loading state
+     */
+    showLoading() {
+        document.getElementById('uploadArea').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+        this.hideResults();
+    }
+
+    /**
+     * Hide loading state
+     */
+    hideLoading() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('uploadArea').style.display = 'block';
+    }
+
+    /**
+     * Display parsed results
+     */
+    displayResults() {
+        this.hideLoading();
+        this.displayStatistics();
+        this.displayBooks();
+        this.showResults();
+    }
+
+    /**
+     * Display statistics dashboard
+     */
+    displayStatistics() {
+        const stats = this.parser.getStatistics();
+        const statsGrid = document.getElementById('statsGrid');
+        
+        statsGrid.innerHTML = `
+            <div class="stat-item">
+                <span class="stat-number">${stats.totalNotes}</span>
+                <span class="stat-label">Total Notes</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.totalBooks}</span>
+                <span class="stat-label">Books</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.highlights}</span>
+                <span class="stat-label">Highlights</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.bookmarks}</span>
+                <span class="stat-label">Bookmarks</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.notes}</span>
+                <span class="stat-label">Notes</span>
+            </div>
+        `;
+
+        document.getElementById('statsCard').style.display = 'block';
+    }
+
+    /**
+     * Display books grid
+     * @param {Object} booksToShow - Books to display (optional)
+     */
+    displayBooks(booksToShow = null) {
+        const books = booksToShow || this.parser.books;
+        const booksGrid = document.getElementById('booksGrid');
+
+        if (Object.keys(books).length === 0) {
+            booksGrid.innerHTML = '<div class="no-results">No books found matching your search criteria.</div>';
+            return;
+        }
+
+        // Sort books by note count (descending)
+        const sortedBooks = Object.entries(books).sort((a, b) => b[1].length - a[1].length);
+
+        booksGrid.innerHTML = sortedBooks.map(([title, notes]) => {
+            const author = notes[0].author;
+            const cleanTitle = this.parser.cleanBookTitle(title, author);
+            const highlightCount = notes.filter(n => n.noteType === 'Highlight').length;
+            const bookmarkCount = notes.filter(n => n.noteType === 'Bookmark').length;
+            const noteCount = notes.filter(n => n.noteType === 'Note').length;
+
+            return `
+                <div class="book-card" onclick="app.showBookNotes('${this.escapeHtml(title)}')">
+                    <div class="book-title">${this.escapeHtml(cleanTitle)}</div>
+                    <div class="book-author">by ${this.escapeHtml(author)}</div>
+                    <div class="book-stats">
+                        <span class="book-stat">${notes.length} total</span>
+                        <span class="book-stat">${highlightCount} highlights</span>
+                        <span class="book-stat">${bookmarkCount} bookmarks</span>
+                        <span class="book-stat">${noteCount} notes</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    /**
+     * Show detailed notes view for a specific book
+     * @param {string} bookTitle - Title of the book
+     */
+    showBookNotes(bookTitle) {
+        const notes = this.parser.books[bookTitle];
+        if (!notes) return;
+
+        const sortedNotes = this.parser.sortNotesByLocation(notes);
+        const author = notes[0].author;
+        const cleanTitle = this.parser.cleanBookTitle(bookTitle, author);
+
+        // Update header
+        const notesHeader = document.getElementById('notesHeader');
+        notesHeader.innerHTML = `
+            <h2 class="book-title">${this.escapeHtml(cleanTitle)}</h2>
+            <p class="book-author">by ${this.escapeHtml(author)}</p>
+            <div class="book-stats">
+                <span class="book-stat">${notes.length} notes • Sorted by location</span>
+            </div>
+            <button class="btn btn-success" onclick="app.copyBookHighlights('${this.escapeHtml(bookTitle)}')">
+                📋 Copy All Highlights
+            </button>
+        `;
+
+        // Display notes
+        const notesContainer = document.getElementById('notesContainer');
+        notesContainer.innerHTML = sortedNotes.map(note => {
+            const noteClass = note.noteType.toLowerCase();
+            const content = note.content.trim() || '[No content]';
+            const isEmpty = !note.content.trim();
+            
+            return `
+                <div class="note ${noteClass}">
+                    <div class="note-meta">
+                        <div>
+                            <span class="note-type-badge ${noteClass}">${note.noteType}</span>
+                            <span style="margin-left: 10px; font-weight: bold; color: #2980b9;">Location ${note.location}</span>
+                        </div>
+                        <span style="font-style: italic;">${note.dateAdded.toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        })}</span>
+                    </div>
+                    <div class="note-content ${isEmpty ? 'empty-note' : ''}">
+                        ${this.escapeHtml(content)}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        this.showNotesView();
+    }
+
+    /**
+     * Filter books by search query and type
+     * @param {string} query - Search query
+     * @param {string} typeFilter - Type filter
+     */
+    filterBooks(query, typeFilter) {
+        const filteredBooks = this.parser.getBooksBySearch(query, typeFilter);
+        this.displayBooks(filteredBooks);
+    }
+
+    /**
+     * Copy all highlights from a book to clipboard
+     * @param {string} bookTitle - Title of the book
+     */
+    copyBookHighlights(bookTitle) {
+        const notes = this.parser.books[bookTitle];
+        const highlights = notes.filter(n => n.noteType === 'Highlight' && n.content.trim());
+        const highlightsText = highlights.map(n => n.content.trim()).join('\n\n');
+
+        if (!highlightsText) {
+            alert('No highlights found in this book.');
+            return;
+        }
+
+        this.copyToClipboard(highlightsText).then(() => {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ Copied to Clipboard!';
+            btn.classList.add('copy-success');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('copy-success');
+            }, 2000);
+        }).catch(() => {
+            alert('Could not copy to clipboard. Please select and copy the text manually.');
+        });
+    }
+
+    /**
+     * Export all highlights to a downloadable file
+     */
+    exportAllHighlights() {
+        const allHighlights = this.parser.notes
+            .filter(n => n.noteType === 'Highlight' && n.content.trim())
+            .map(n => `${this.parser.cleanBookTitle(n.bookTitle, n.author)}\n${n.content.trim()}`)
+            .join('\n\n---\n\n');
+
+        if (!allHighlights) {
+            alert('No highlights found to export.');
+            return;
+        }
+
+        this.downloadTextFile('all_kindle_highlights.txt', allHighlights);
+    }
+
+    /**
+     * Copy text to clipboard
+     * @param {string} text - Text to copy
+     * @returns {Promise} Copy promise
+     */
+    async copyToClipboard(text) {
+        if (navigator.clipboard) {
+            return navigator.clipboard.writeText(text);
+        } else {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            return Promise.resolve();
+        }
+    }
+
+    /**
+     * Download text as file
+     * @param {string} filename - File name
+     * @param {string} content - File content
+     */
+    downloadTextFile(filename, content) {
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+
+    /**
+     * Show results view
+     */
+    showResults() {
+        document.getElementById('controls').style.display = 'block';
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('notesView').style.display = 'none';
+    }
+
+    /**
+     * Show books view
+     */
+    showBooksView() {
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('notesView').style.display = 'none';
+    }
+
+    /**
+     * Show notes view
+     */
+    showNotesView() {
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('notesView').style.display = 'block';
+    }
+
+    /**
+     * Hide all result views
+     */
+    hideResults() {
+        document.getElementById('statsCard').style.display = 'none';
+        document.getElementById('controls').style.display = 'none';
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('notesView').style.display = 'none';
+    }
+
+    /**
+     * Reset application to initial state
+     */
+    reset() {
+        this.hideResults();
+        document.getElementById('uploadArea').style.display = 'block';
+        document.getElementById('searchBox').value = '';
+        document.getElementById('typeFilter').value = 'all';
+        document.getElementById('fileInput').value = '';
+    }
+
+    /**
+     * Escape HTML characters in text
+     * @param {string} text - Text to escape
+     * @returns {string} Escaped text
+     */
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+}
+
+
+
+/**
+ * Main Application Initialization
+ * Entry point for the Kindle Notes Parser web application
+ */
+
+// Initialize the application when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Kindle Notes Parser - Initializing...');
+    
+    // Create and start the app
+    window.app = new KindleNotesApp();
+    
+    console.log('✅ Application ready! Upload your My Clippings.txt file to get started.');
+});
+    </script>
+</body>
+</html>
