@@ -568,6 +568,118 @@ body {
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
+
+/* =================================================================== */
+/* ACCESSIBILITY STYLES */
+/* =================================================================== */
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Enhanced focus indicators */
+.upload-area:focus {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+button:focus, .btn:focus {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+.theme-toggle:focus {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+.filter-select:focus {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Improve search box focus (enhance existing) */
+.search-box:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.3);
+}
+
+/* Book card focus for keyboard navigation */
+.book-card:focus {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 2px;
+    transform: translateY(-2px);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .upload-area:focus,
+    button:focus,
+    .btn:focus,
+    .theme-toggle:focus,
+    .filter-select:focus,
+    .book-card:focus {
+        outline: 4px solid;
+        outline-offset: 2px;
+    }
+    
+    .search-box:focus {
+        box-shadow: 0 0 0 4px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .spinner {
+        animation: none;
+    }
+    
+    .book-card:hover {
+        transform: none;
+    }
+    
+    .upload-area:hover {
+        transform: none;
+    }
+}
+
+/* Ensure minimum touch target size (44px) */
+@media (pointer: coarse) {
+    button, .btn, .theme-toggle {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .upload-area {
+        min-height: 100px;
+    }
+}
+
+/* Color contrast improvements for better readability */
+.book-stat {
+    border: 1px solid var(--border-primary);
+}
+
+.note-type-badge {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
     </style>
 </head>
 <body>
@@ -582,54 +694,83 @@ body {
         </div>
 
         <!-- File Upload Area -->
-        <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">📁</div>
+        <div class="upload-area" 
+             id="uploadArea" 
+             role="button" 
+             tabindex="0"
+             aria-label="Upload Kindle notes file"
+             aria-describedby="upload-instructions">
+            <div class="upload-icon" aria-hidden="true">📁</div>
             <div class="upload-text">Drop your My Clippings.txt file here</div>
-            <div class="upload-subtext">or click to browse for files</div>
-            <input type="file" id="fileInput" accept=".txt" />
+            <div class="upload-subtext" id="upload-instructions">
+                or click to browse for files. Supports .txt files only.
+            </div>
+            <input type="file" 
+                   id="fileInput" 
+                   accept=".txt" 
+                   aria-label="Select Kindle notes file" />
         </div>
 
         <!-- Loading -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
+        <div class="loading" id="loading" role="status" aria-live="polite">
+            <div class="spinner" aria-hidden="true"></div>
             <p>Parsing your Kindle notes...</p>
         </div>
 
         <!-- Statistics -->
-        <div class="stats-section" id="statsCard">
-            <h3 class="stats-title">📊 Your Reading Statistics</h3>
-            <div class="stats-grid" id="statsGrid"></div>
+        <div class="stats-section" id="statsCard" role="region" aria-labelledby="stats-heading">
+            <h3 class="stats-title" id="stats-heading">📊 Your Reading Statistics</h3>
+            <div class="stats-grid" id="statsGrid" role="list" aria-label="Reading statistics"></div>
         </div>
 
         <!-- Controls -->
-        <div class="controls" id="controls">
+        <div class="controls" id="controls" role="region" aria-label="Search and filter controls">
             <div class="controls-row">
-                <input type="text" class="search-box" id="searchBox" placeholder="Search books, authors, or content...">
-                <select class="filter-select" id="typeFilter">
+                <input type="text" 
+                       class="search-box" 
+                       id="searchBox" 
+                       placeholder="Search books, authors, or content..."
+                       aria-label="Search through your notes"
+                       role="searchbox">
+                <select class="filter-select" 
+                        id="typeFilter"
+                        aria-label="Filter by note type">
                     <option value="all">All Types</option>
                     <option value="Highlight">Highlights Only</option>
                     <option value="Bookmark">Bookmarks Only</option>
                     <option value="Note">Notes Only</option>
                 </select>
-                <button class="btn" id="exportAllBtn">Export All</button>
-                <button class="btn btn-secondary" id="resetBtn">Reset</button>
+                <button class="btn" 
+                        id="exportAllBtn"
+                        aria-describedby="export-help">Export All</button>
+                <button class="btn btn-secondary" 
+                        id="resetBtn"
+                        aria-label="Reset and clear all filters">Reset</button>
             </div>
         </div>
 
         <!-- Results -->
-        <div class="results" id="results">
-            <div class="books-grid" id="booksGrid">
+        <div class="results" id="results" role="region" aria-labelledby="results-heading">
+            <h2 id="results-heading" class="sr-only">Search Results</h2>
+            <div class="books-grid" 
+                 id="booksGrid"
+                 role="list"
+                 aria-label="Books from your Kindle notes">
                 <!-- Books will be populated here -->
             </div>
         </div>
 
         <!-- Notes View -->
-        <div class="notes-view" id="notesView">
-            <button class="btn back-btn" id="backBtn">← Back to Books</button>
-            <div class="notes-header" id="notesHeader">
+        <div class="notes-view" id="notesView" role="main" aria-labelledby="book-title">
+            <button class="btn back-btn" 
+                    id="backBtn"
+                    aria-label="Go back to books list">← Back to Books</button>
+            <div class="notes-header" id="notesHeader" role="banner">
                 <!-- Book details will be shown here -->
             </div>
-            <div id="notesContainer">
+            <div id="notesContainer" 
+                 role="list"
+                 aria-label="Notes and highlights from this book">
                 <!-- Notes will be shown here -->
             </div>
         </div>
@@ -1216,16 +1357,30 @@ class KindleNotesApp {
         const fileInput = document.getElementById('fileInput');
 
         uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // Keyboard support for upload area
+        uploadArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+        
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
+            uploadArea.setAttribute('aria-label', 'Drop file here to upload');
         });
+        
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.classList.remove('dragover');
+            uploadArea.setAttribute('aria-label', 'Upload Kindle notes file');
         });
+        
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
+            uploadArea.setAttribute('aria-label', 'Upload Kindle notes file');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 this.handleFile(files[0]);
@@ -1339,6 +1494,10 @@ class KindleNotesApp {
         this.displayStatistics();
         this.displayBooks();
         this.showResults();
+        
+        // Announce results to screen readers
+        const stats = this.parser.getStatistics();
+        this.announceToScreenReader(`Processing complete. Found ${stats.totalNotes} notes from ${stats.totalBooks} books.`);
     }
 
     /**
@@ -1350,25 +1509,25 @@ class KindleNotesApp {
         const statsGrid = document.getElementById('statsGrid');
         
         statsGrid.innerHTML = `
-            <div class="stat-item">
-                <span class="stat-number">${stats.totalNotes}</span>
-                <span class="stat-label">Total Notes</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.totalNotes} total notes">
+                <span class="stat-number" aria-hidden="true">${stats.totalNotes}</span>
+                <span class="stat-label" aria-hidden="true">Total Notes</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.totalBooks}</span>
-                <span class="stat-label">Books</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.totalBooks} books">
+                <span class="stat-number" aria-hidden="true">${stats.totalBooks}</span>
+                <span class="stat-label" aria-hidden="true">Books</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.highlights}</span>
-                <span class="stat-label">Highlights</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.highlights} highlights">
+                <span class="stat-number" aria-hidden="true">${stats.highlights}</span>
+                <span class="stat-label" aria-hidden="true">Highlights</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.bookmarks}</span>
-                <span class="stat-label">Bookmarks</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.bookmarks} bookmarks">
+                <span class="stat-number" aria-hidden="true">${stats.bookmarks}</span>
+                <span class="stat-label" aria-hidden="true">Bookmarks</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.notes}</span>
-                <span class="stat-label">Notes</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.notes} notes">
+                <span class="stat-number" aria-hidden="true">${stats.notes}</span>
+                <span class="stat-label" aria-hidden="true">Notes</span>
             </div>
         `;
 
@@ -1402,14 +1561,19 @@ class KindleNotesApp {
             const noteCount = notes.filter(n => n.noteType === 'Note').length;
 
             return `
-                <div class="book-card" onclick="app.showBookNotes('${this.escapeHtml(title)}')">
+                <div class="book-card" 
+                     role="listitem"
+                     tabindex="0"
+                     onclick="app.showBookNotes('${this.escapeHtml(title)}')"
+                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();app.showBookNotes('${this.escapeHtml(title)}');}"
+                     aria-label="View notes for ${this.escapeHtml(cleanTitle)} by ${this.escapeHtml(author)}, ${notes.length} notes total">
                     <div class="book-title">${this.escapeHtml(cleanTitle)}</div>
                     <div class="book-author">by ${this.escapeHtml(author)}</div>
                     <div class="book-stats">
-                        <span class="book-stat">${notes.length} total</span>
-                        <span class="book-stat">${highlightCount} highlights</span>
-                        <span class="book-stat">${bookmarkCount} bookmarks</span>
-                        <span class="book-stat">${noteCount} notes</span>
+                        <span class="book-stat" role="text">${notes.length} total</span>
+                        <span class="book-stat" role="text">${highlightCount} highlights</span>
+                        <span class="book-stat" role="text">${bookmarkCount} bookmarks</span>
+                        <span class="book-stat" role="text">${noteCount} notes</span>
                     </div>
                 </div>
             `;
@@ -1434,37 +1598,50 @@ class KindleNotesApp {
         // Update header
         const notesHeader = document.getElementById('notesHeader');
         notesHeader.innerHTML = `
-            <h2 class="book-title">${this.escapeHtml(cleanTitle)}</h2>
+            <h2 class="book-title" id="book-title">${this.escapeHtml(cleanTitle)}</h2>
             <p class="book-author">by ${this.escapeHtml(author)}</p>
             <div class="book-stats">
                 <span class="book-stat">${notes.length} notes • Sorted by location</span>
             </div>
-            <button class="btn btn-success" onclick="app.copyBookHighlights('${this.escapeHtml(bookTitle)}')">
+            <button class="btn btn-success" 
+                    onclick="app.copyBookHighlights('${this.escapeHtml(bookTitle)}')"
+                    aria-label="Copy all highlights from ${this.escapeHtml(cleanTitle)}">
                 📋 Copy All Highlights
             </button>
         `;
+        
+        // Update page title and announce to screen readers
+        this.updatePageTitle(`${cleanTitle} - Kindle Notes Parser`);
+        this.announceToScreenReader(`Viewing ${notes.length} notes from ${cleanTitle} by ${author}`);
 
         // Display notes
         const notesContainer = document.getElementById('notesContainer');
-        notesContainer.innerHTML = sortedNotes.map(note => {
+        notesContainer.innerHTML = sortedNotes.map((note, index) => {
             const noteClass = note.noteType.toLowerCase();
             const content = note.content.trim() || '[No content]';
             const isEmpty = !note.content.trim();
+            const formattedDate = note.dateAdded.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
             
             return `
-                <div class="note ${noteClass}">
+                <div class="note ${noteClass}" 
+                     role="listitem" 
+                     aria-labelledby="note-heading-${index}"
+                     tabindex="0">
                     <div class="note-meta">
                         <div>
-                            <span class="note-type-badge ${noteClass}">${note.noteType}</span>
-                            <span style="margin-left: 10px; font-weight: bold; color: #2980b9;">Location ${note.location}</span>
+                            <span class="note-type-badge ${noteClass}" aria-label="${note.noteType} note">${note.noteType}</span>
+                            <span style="margin-left: 10px; font-weight: bold; color: var(--accent-primary);">Location ${note.location}</span>
                         </div>
-                        <span style="font-style: italic;">${note.dateAdded.toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
-                        })}</span>
+                        <span style="font-style: italic;" aria-label="Added on ${formattedDate}">${formattedDate}</span>
                     </div>
-                    <div class="note-content ${isEmpty ? 'empty-note' : ''}">
+                    <div id="note-heading-${index}" class="sr-only">
+                        ${note.noteType} at location ${note.location} from ${formattedDate}
+                    </div>
+                    <div class="note-content ${isEmpty ? 'empty-note' : ''}" role="text">
                         ${this.escapeHtml(content)}
                     </div>
                 </div>
@@ -1576,6 +1753,9 @@ class KindleNotesApp {
         document.getElementById('controls').style.display = 'block';
         document.getElementById('results').style.display = 'block';
         document.getElementById('notesView').style.display = 'none';
+        
+        // Reset page title when showing main results
+        this.updatePageTitle('Kindle Notes Parser - Web App');
     }
 
     /**
@@ -1640,6 +1820,38 @@ class KindleNotesApp {
             console.log('📋 Performance Summary:');
             console.table(summary);
         }
+    }
+
+    /**
+     * Announce message to screen readers using live region
+     * @param {string} message - Message to announce
+     * @param {string} priority - 'polite' or 'assertive'
+     */
+    announceToScreenReader(message, priority = 'polite') {
+        // Create or update live region
+        let liveRegion = document.getElementById('live-region');
+        if (!liveRegion) {
+            liveRegion = document.createElement('div');
+            liveRegion.id = 'live-region';
+            liveRegion.setAttribute('aria-live', priority);
+            liveRegion.setAttribute('aria-atomic', 'true');
+            liveRegion.className = 'sr-only';
+            document.body.appendChild(liveRegion);
+        }
+        
+        // Clear and set new message
+        liveRegion.textContent = '';
+        setTimeout(() => {
+            liveRegion.textContent = message;
+        }, 100);
+    }
+
+    /**
+     * Update page title for screen readers and browser tab
+     * @param {string} title - New page title
+     */
+    updatePageTitle(title) {
+        document.title = title;
     }
 
     /**

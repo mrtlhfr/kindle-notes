@@ -18,16 +18,30 @@ class KindleNotesApp {
         const fileInput = document.getElementById('fileInput');
 
         uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // Keyboard support for upload area
+        uploadArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+        
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
+            uploadArea.setAttribute('aria-label', 'Drop file here to upload');
         });
+        
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.classList.remove('dragover');
+            uploadArea.setAttribute('aria-label', 'Upload Kindle notes file');
         });
+        
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
+            uploadArea.setAttribute('aria-label', 'Upload Kindle notes file');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 this.handleFile(files[0]);
@@ -141,6 +155,10 @@ class KindleNotesApp {
         this.displayStatistics();
         this.displayBooks();
         this.showResults();
+        
+        // Announce results to screen readers
+        const stats = this.parser.getStatistics();
+        this.announceToScreenReader(`Processing complete. Found ${stats.totalNotes} notes from ${stats.totalBooks} books.`);
     }
 
     /**
@@ -152,25 +170,25 @@ class KindleNotesApp {
         const statsGrid = document.getElementById('statsGrid');
         
         statsGrid.innerHTML = `
-            <div class="stat-item">
-                <span class="stat-number">${stats.totalNotes}</span>
-                <span class="stat-label">Total Notes</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.totalNotes} total notes">
+                <span class="stat-number" aria-hidden="true">${stats.totalNotes}</span>
+                <span class="stat-label" aria-hidden="true">Total Notes</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.totalBooks}</span>
-                <span class="stat-label">Books</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.totalBooks} books">
+                <span class="stat-number" aria-hidden="true">${stats.totalBooks}</span>
+                <span class="stat-label" aria-hidden="true">Books</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.highlights}</span>
-                <span class="stat-label">Highlights</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.highlights} highlights">
+                <span class="stat-number" aria-hidden="true">${stats.highlights}</span>
+                <span class="stat-label" aria-hidden="true">Highlights</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.bookmarks}</span>
-                <span class="stat-label">Bookmarks</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.bookmarks} bookmarks">
+                <span class="stat-number" aria-hidden="true">${stats.bookmarks}</span>
+                <span class="stat-label" aria-hidden="true">Bookmarks</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.notes}</span>
-                <span class="stat-label">Notes</span>
+            <div class="stat-item" role="listitem" aria-label="${stats.notes} notes">
+                <span class="stat-number" aria-hidden="true">${stats.notes}</span>
+                <span class="stat-label" aria-hidden="true">Notes</span>
             </div>
         `;
 
@@ -204,14 +222,19 @@ class KindleNotesApp {
             const noteCount = notes.filter(n => n.noteType === 'Note').length;
 
             return `
-                <div class="book-card" onclick="app.showBookNotes('${this.escapeHtml(title)}')">
+                <div class="book-card" 
+                     role="listitem"
+                     tabindex="0"
+                     onclick="app.showBookNotes('${this.escapeHtml(title)}')"
+                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();app.showBookNotes('${this.escapeHtml(title)}');}"
+                     aria-label="View notes for ${this.escapeHtml(cleanTitle)} by ${this.escapeHtml(author)}, ${notes.length} notes total">
                     <div class="book-title">${this.escapeHtml(cleanTitle)}</div>
                     <div class="book-author">by ${this.escapeHtml(author)}</div>
                     <div class="book-stats">
-                        <span class="book-stat">${notes.length} total</span>
-                        <span class="book-stat">${highlightCount} highlights</span>
-                        <span class="book-stat">${bookmarkCount} bookmarks</span>
-                        <span class="book-stat">${noteCount} notes</span>
+                        <span class="book-stat" role="text">${notes.length} total</span>
+                        <span class="book-stat" role="text">${highlightCount} highlights</span>
+                        <span class="book-stat" role="text">${bookmarkCount} bookmarks</span>
+                        <span class="book-stat" role="text">${noteCount} notes</span>
                     </div>
                 </div>
             `;
@@ -236,37 +259,50 @@ class KindleNotesApp {
         // Update header
         const notesHeader = document.getElementById('notesHeader');
         notesHeader.innerHTML = `
-            <h2 class="book-title">${this.escapeHtml(cleanTitle)}</h2>
+            <h2 class="book-title" id="book-title">${this.escapeHtml(cleanTitle)}</h2>
             <p class="book-author">by ${this.escapeHtml(author)}</p>
             <div class="book-stats">
                 <span class="book-stat">${notes.length} notes • Sorted by location</span>
             </div>
-            <button class="btn btn-success" onclick="app.copyBookHighlights('${this.escapeHtml(bookTitle)}')">
+            <button class="btn btn-success" 
+                    onclick="app.copyBookHighlights('${this.escapeHtml(bookTitle)}')"
+                    aria-label="Copy all highlights from ${this.escapeHtml(cleanTitle)}">
                 📋 Copy All Highlights
             </button>
         `;
+        
+        // Update page title and announce to screen readers
+        this.updatePageTitle(`${cleanTitle} - Kindle Notes Parser`);
+        this.announceToScreenReader(`Viewing ${notes.length} notes from ${cleanTitle} by ${author}`);
 
         // Display notes
         const notesContainer = document.getElementById('notesContainer');
-        notesContainer.innerHTML = sortedNotes.map(note => {
+        notesContainer.innerHTML = sortedNotes.map((note, index) => {
             const noteClass = note.noteType.toLowerCase();
             const content = note.content.trim() || '[No content]';
             const isEmpty = !note.content.trim();
+            const formattedDate = note.dateAdded.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
             
             return `
-                <div class="note ${noteClass}">
+                <div class="note ${noteClass}" 
+                     role="listitem" 
+                     aria-labelledby="note-heading-${index}"
+                     tabindex="0">
                     <div class="note-meta">
                         <div>
-                            <span class="note-type-badge ${noteClass}">${note.noteType}</span>
-                            <span style="margin-left: 10px; font-weight: bold; color: #2980b9;">Location ${note.location}</span>
+                            <span class="note-type-badge ${noteClass}" aria-label="${note.noteType} note">${note.noteType}</span>
+                            <span style="margin-left: 10px; font-weight: bold; color: var(--accent-primary);">Location ${note.location}</span>
                         </div>
-                        <span style="font-style: italic;">${note.dateAdded.toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
-                        })}</span>
+                        <span style="font-style: italic;" aria-label="Added on ${formattedDate}">${formattedDate}</span>
                     </div>
-                    <div class="note-content ${isEmpty ? 'empty-note' : ''}">
+                    <div id="note-heading-${index}" class="sr-only">
+                        ${note.noteType} at location ${note.location} from ${formattedDate}
+                    </div>
+                    <div class="note-content ${isEmpty ? 'empty-note' : ''}" role="text">
                         ${this.escapeHtml(content)}
                     </div>
                 </div>
@@ -378,6 +414,9 @@ class KindleNotesApp {
         document.getElementById('controls').style.display = 'block';
         document.getElementById('results').style.display = 'block';
         document.getElementById('notesView').style.display = 'none';
+        
+        // Reset page title when showing main results
+        this.updatePageTitle('Kindle Notes Parser - Web App');
     }
 
     /**
@@ -442,6 +481,38 @@ class KindleNotesApp {
             console.log('📋 Performance Summary:');
             console.table(summary);
         }
+    }
+
+    /**
+     * Announce message to screen readers using live region
+     * @param {string} message - Message to announce
+     * @param {string} priority - 'polite' or 'assertive'
+     */
+    announceToScreenReader(message, priority = 'polite') {
+        // Create or update live region
+        let liveRegion = document.getElementById('live-region');
+        if (!liveRegion) {
+            liveRegion = document.createElement('div');
+            liveRegion.id = 'live-region';
+            liveRegion.setAttribute('aria-live', priority);
+            liveRegion.setAttribute('aria-atomic', 'true');
+            liveRegion.className = 'sr-only';
+            document.body.appendChild(liveRegion);
+        }
+        
+        // Clear and set new message
+        liveRegion.textContent = '';
+        setTimeout(() => {
+            liveRegion.textContent = message;
+        }, 100);
+    }
+
+    /**
+     * Update page title for screen readers and browser tab
+     * @param {string} title - New page title
+     */
+    updatePageTitle(title) {
+        document.title = title;
     }
 
     /**
