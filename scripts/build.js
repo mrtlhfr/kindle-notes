@@ -14,6 +14,7 @@ const indexHtml = fs.readFileSync(path.join(__dirname, '../src/index.html'), 'ut
 const styles = fs.readFileSync(path.join(__dirname, '../src/styles.css'), 'utf8');
 const modelsJs = fs.readFileSync(path.join(__dirname, '../src/js/models.js'), 'utf8');
 const parserJs = fs.readFileSync(path.join(__dirname, '../src/js/parser.js'), 'utf8');
+const themeJs = fs.readFileSync(path.join(__dirname, '../src/js/theme.js'), 'utf8');
 const appJs = fs.readFileSync(path.join(__dirname, '../src/js/app.js'), 'utf8');
 const mainJs = fs.readFileSync(path.join(__dirname, '../src/js/main.js'), 'utf8');
 
@@ -57,6 +58,14 @@ ${cleanJs(modelsJs)}
  */
 
 ${cleanJs(parserJs)}
+
+
+/**
+ * Theme Manager
+ * Handles light/dark theme detection and switching
+ */
+
+${cleanJs(themeJs)}
 
 
 /**

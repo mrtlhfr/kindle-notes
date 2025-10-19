@@ -16,6 +16,10 @@
 <body>
     <div class="container">
         <div class="header">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light theme">
+                <span class="theme-icon" id="themeIcon">🌙</span>
+                <span id="themeText">Dark</span>
+            </button>
             <h1 class="main-title">📚 Kindle Notes Parser</h1>
             <p class="subtitle">Upload your My Clippings.txt file to organize your highlights and notes</p>
         </div>
@@ -35,11 +39,9 @@
         </div>
 
         <!-- Statistics -->
-        <div class="stats-card" id="statsCard">
-            <h3 style="margin-bottom: 20px; text-align: center; color: #2c3e50;">📊 Your Reading Statistics</h3>
-            <div class="stats-grid" id="statsGrid">
-                <!-- Stats will be populated here -->
-            </div>
+        <div class="stats-section" id="statsCard">
+            <h3 class="stats-title">📊 Your Reading Statistics</h3>
+            <div class="stats-grid" id="statsGrid"></div>
         </div>
 
         <!-- Controls -->
@@ -79,6 +81,7 @@
     <!-- JavaScript Modules -->
     <script src="js/models.js"></script>
     <script src="js/parser.js"></script>
+    <script src="js/theme.js"></script>
     <script src="js/app.js"></script>
     <script src="js/main.js"></script>
 </body>

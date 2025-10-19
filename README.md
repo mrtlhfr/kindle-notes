@@ -21,6 +21,7 @@ No installation required - just upload your Kindle notes file and start explorin
 - **📋 Export capabilities**: Copy to clipboard or download as text files
 - **📱 Responsive Design**: Works perfectly on desktop, tablet, and mobile
 - **🔒 Privacy-first**: All processing happens client-side, no data leaves your device
+- **🎨 Dark/Light Theme**: Automatic system preference detection with manual toggle
 
 ## 📁 Project Structure
 
@@ -139,6 +140,13 @@ npm start
 - **One-click copy**: Copy all highlights from a book to clipboard
 - **Bulk export**: Download all highlights as a text file
 - **Easy sharing**: Perfect for creating study materials or sharing insights
+
+### 🎨 Theme System
+- **Automatic Detection**: Respects your system's light/dark mode preference
+- **Manual Toggle**: Click the theme button (🌙/☀️) to switch between modes
+- **Persistent Preferences**: Your theme choice is saved and restored
+- **Smooth Transitions**: Elegant theme switching with CSS transitions
+- **Comprehensive Styling**: All UI elements adapt to the selected theme
 
 ## 📄 Supported File Format
 

@@ -7,6 +7,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Kindle Notes Parser - Initializing...');
     
+    // Initialize theme manager first
+    window.themeManager = new ThemeManager();
+    console.log(`🎨 Theme initialized: ${window.themeManager.getCurrentTheme()}`);
+    
     // Create and start the app
     window.app = new KindleNotesApp();
     
