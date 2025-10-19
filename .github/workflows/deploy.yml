@@ -37,6 +37,9 @@ jobs:
     - name: Build application
       run: npm run build
       
+    - name: Copy to index.html for GitHub Pages
+      run: cp kindle-notes-web-app.html index.html
+      
     - name: Setup Pages
       uses: actions/configure-pages@v5
       
