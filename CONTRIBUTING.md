@@ -7,8 +7,8 @@ Thank you for your interest in contributing! This project welcomes contributions
 1. **Fork the repository**
 2. **Clone your fork**:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/kindle-notes-parser.git
-   cd kindle-notes-parser
+   git clone https://github.com/YOUR_USERNAME/kindle-notes.git
+   cd kindle-notes
    ```
 3. **Install dependencies**:
    ```bash
