@@ -68,6 +68,9 @@ class KindleNotesApp {
      * @param {File} file - Selected file
      */
     async handleFile(file) {
+        const totalStartTime = performance.now();
+        console.log(`📁 Processing file: ${file.name} (${(file.size / 1024).toFixed(1)}KB)`);
+        
         if (!file.name.toLowerCase().endsWith('.txt')) {
             alert('Please select a .txt file');
             return;
@@ -76,10 +79,24 @@ class KindleNotesApp {
         this.showLoading();
 
         try {
+            const readStartTime = performance.now();
             const content = await this.readFile(file);
+            const readTime = performance.now() - readStartTime;
+            console.log(`📖 File read in ${readTime.toFixed(2)}ms`);
+            
             this.parser.parseFile(content);
+            
+            const displayStartTime = performance.now();
             this.displayResults();
+            const displayTime = performance.now() - displayStartTime;
+            console.log(`🎨 UI rendered in ${displayTime.toFixed(2)}ms`);
+            
+            const totalTime = performance.now() - totalStartTime;
+            console.log(`🏁 Total processing time: ${totalTime.toFixed(2)}ms`);
+            console.log(`📊 Performance breakdown: Read(${((readTime/totalTime)*100).toFixed(1)}%) + Parse(${(((window.lastParsingStats?.processingTime || 0)/totalTime)*100).toFixed(1)}%) + Display(${((displayTime/totalTime)*100).toFixed(1)}%)`);
+            
         } catch (error) {
+            console.error('❌ File processing failed:', error);
             alert('Error reading file: ' + error.message);
             this.hideLoading();
         }
@@ -130,6 +147,7 @@ class KindleNotesApp {
      * Display statistics dashboard
      */
     displayStatistics() {
+        const statsStartTime = performance.now();
         const stats = this.parser.getStatistics();
         const statsGrid = document.getElementById('statsGrid');
         
@@ -157,6 +175,8 @@ class KindleNotesApp {
         `;
 
         document.getElementById('statsCard').style.display = 'block';
+        const statsTime = performance.now() - statsStartTime;
+        console.log(`📊 Statistics rendered in ${statsTime.toFixed(2)}ms`);
     }
 
     /**
@@ -164,6 +184,7 @@ class KindleNotesApp {
      * @param {Object} booksToShow - Books to display (optional)
      */
     displayBooks(booksToShow = null) {
+        const booksStartTime = performance.now();
         const books = booksToShow || this.parser.books;
         const booksGrid = document.getElementById('booksGrid');
 
@@ -195,6 +216,9 @@ class KindleNotesApp {
                 </div>
             `;
         }).join('');
+        
+        const booksTime = performance.now() - booksStartTime;
+        console.log(`📚 Books grid rendered in ${booksTime.toFixed(2)}ms (${Object.keys(books).length} books)`);
     }
 
     /**
@@ -391,6 +415,33 @@ class KindleNotesApp {
         document.getElementById('searchBox').value = '';
         document.getElementById('typeFilter').value = 'all';
         document.getElementById('fileInput').value = '';
+    }
+
+    /**
+     * Get performance summary for the current session
+     * @returns {Object} Performance statistics
+     */
+    getPerformanceSummary() {
+        if (window.lastParsingStats) {
+            return {
+                ...window.lastParsingStats,
+                timestamp: new Date().toISOString(),
+                averageNotesPerBook: (window.lastParsingStats.notesCount / window.lastParsingStats.booksCount).toFixed(1),
+                memoryEstimate: `${(window.lastParsingStats.fileSize / 1024 / 1024).toFixed(2)}MB processed`
+            };
+        }
+        return null;
+    }
+
+    /**
+     * Log performance summary to console
+     */
+    logPerformanceSummary() {
+        const summary = this.getPerformanceSummary();
+        if (summary) {
+            console.log('📋 Performance Summary:');
+            console.table(summary);
+        }
     }
 
     /**

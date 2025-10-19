@@ -14,6 +14,9 @@ class KindleNotesParser {
      * @param {string} content - Raw file content
      */
     parseFile(content) {
+        const startTime = performance.now();
+        console.log(`📊 Processing file size: ${(content.length / 1024).toFixed(1)}KB`);
+        
         // Split by the separator
         const entries = content.split('==========');
         
@@ -34,6 +37,28 @@ class KindleNotesParser {
                 this.books[note.bookTitle].push(note);
             }
         });
+        
+        const endTime = performance.now();
+        const processingTime = endTime - startTime;
+        const processingRate = (content.length / 1024) / (processingTime / 1000); // KB/sec
+        
+        console.log(`⚡ Parsing completed in ${processingTime.toFixed(2)}ms`);
+        console.log(`📈 Parsed ${this.notes.length} notes from ${Object.keys(this.books).length} books`);
+        console.log(`🚀 Processing rate: ${processingRate.toFixed(1)} KB/sec`);
+        console.log(`� Raw entries found: ${entries.length - 1} (${this.notes.length} valid notes)`);
+        
+        // Performance summary for analytics
+        const performanceStats = {
+            fileSize: content.length,
+            processingTime: processingTime,
+            notesCount: this.notes.length,
+            booksCount: Object.keys(this.books).length,
+            processingRate: processingRate,
+            validEntriesRatio: (this.notes.length / (entries.length - 1) * 100).toFixed(1)
+        };
+        
+        // Store performance data for potential future analysis
+        window.lastParsingStats = performanceStats;
     }
 
     /**
