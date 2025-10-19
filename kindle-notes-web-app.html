@@ -10,6 +10,11 @@
  * Modern, responsive CSS for the web application
  */
 
+/* 
+ * Kindle Notes Parser - Styles
+ * Modern, responsive CSS for the web application
+ */
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -266,16 +271,19 @@ body {
 
 .book-stats {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 8px;
     font-size: 0.9em;
     color: #7f8c8d;
 }
 
 .book-stat {
     background: #ecf0f1;
-    padding: 6px 12px;
+    padding: 6px 10px;
     border-radius: 15px;
     font-weight: bold;
+    white-space: nowrap;
+    font-size: 0.85em;
 }
 
 /* Notes View */
@@ -479,6 +487,11 @@ body {
  * Represents a single Kindle note/highlight/bookmark
  */
 
+/**
+ * KindleNote Model
+ * Represents a single Kindle note/highlight/bookmark
+ */
+
 class KindleNote {
     /**
      * Create a new Kindle note
@@ -510,6 +523,10 @@ class KindleNote {
 }
 
 
+/**
+ * KindleNotesParser
+ * Core parsing logic for Kindle "My Clippings.txt" files
+ */
 
 /**
  * KindleNotesParser
@@ -686,15 +703,13 @@ class KindleNotesParser {
             const authorWords = author.trim().split(/\s+/);
             
             // Remove full author name
-            const authorPattern = new RegExp('\\b' + this.escapeRegex(author.trim()) + '\\b\\s*
-</html>, 'i');
+            const authorPattern = new RegExp('\\b' + this.escapeRegex(author.trim()) + '\\b\\s*$', 'i');
             cleanTitle = cleanTitle.replace(authorPattern, '').trim();
             
             // Remove individual author words
             authorWords.forEach(word => {
                 if (word.length > 2) {
-                    const wordPattern = new RegExp('\\b' + this.escapeRegex(word) + '\\b\\s*
-</html>, 'i');
+                    const wordPattern = new RegExp('\\b' + this.escapeRegex(word) + '\\b\\s*$', 'i');
                     cleanTitle = cleanTitle.replace(wordPattern, '').trim();
                 }
             });
@@ -731,12 +746,7 @@ class KindleNotesParser {
      * @returns {string} Escaped string
      */
     escapeRegex(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\<!-- JavaScript Modules -->
-    <script src="js/models.js"></script>
-    <script src="js/parser.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/main.js"></script>
-</body>');
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     /**
@@ -819,6 +829,10 @@ class KindleNotesParser {
 }
 
 
+/**
+ * KindleNotesApp
+ * Main application class that handles UI interactions and file processing
+ */
 
 /**
  * KindleNotesApp
@@ -1228,6 +1242,10 @@ class KindleNotesApp {
 }
 
 
+/**
+ * Main Application Initialization
+ * Entry point for the Kindle Notes Parser web application
+ */
 
 /**
  * Main Application Initialization

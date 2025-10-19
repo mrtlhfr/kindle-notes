@@ -30,16 +30,20 @@ jobs:
     - name: Build application
       run: npm run build
 
+    - name: Copy to index.html for GitHub Pages
+      run: cp kindle-notes-web-app.html index.html
+
     - name: Verify build output
       run: |
-        if [ ! -f "kindle-notes-web-app.html" ]; then
-          echo "Build failed: kindle-notes-web-app.html not found"
+        if [ ! -f "index.html" ]; then
+          echo "Build failed: index.html not found"
           exit 1
         fi
-        echo "Build successful: $(ls -lh kindle-notes-web-app.html)"
+        echo "Build successful: $(ls -lh index.html)"
+        echo "Original file: $(ls -lh kindle-notes-web-app.html)"
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
-        name: kindle-notes-web-app-${{ matrix.node-version }}
-        path: kindle-notes-web-app.html
+        name: kindle-notes-index-${{ matrix.node-version }}
+        path: index.html

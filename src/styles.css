@@ -259,16 +259,19 @@ body {
 
 .book-stats {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 8px;
     font-size: 0.9em;
     color: #7f8c8d;
 }
 
 .book-stat {
     background: #ecf0f1;
-    padding: 6px 12px;
+    padding: 6px 10px;
     border-radius: 15px;
     font-weight: bold;
+    white-space: nowrap;
+    font-size: 0.85em;
 }
 
 /* Notes View */
