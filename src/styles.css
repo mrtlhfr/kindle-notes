@@ -661,3 +661,233 @@ button:focus, .btn:focus {
 .note-type-badge {
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+/* ==========================================================================
+   ERROR HANDLING & NOTIFICATIONS
+   ========================================================================== */
+
+/* Error, Warning & Success Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 1.4;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    border-left: 4px solid;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Error Notification */
+.notification.error {
+    background: linear-gradient(135deg, 
+        rgba(231, 76, 60, 0.1) 0%, 
+        rgba(192, 57, 43, 0.05) 100%);
+    border-left-color: #e74c3c;
+    color: var(--text-primary);
+}
+
+.notification.error .notification-icon {
+    color: #e74c3c;
+    font-size: 18px;
+}
+
+/* Warning Notification */
+.notification.warning {
+    background: linear-gradient(135deg, 
+        rgba(243, 156, 18, 0.1) 0%, 
+        rgba(230, 126, 34, 0.05) 100%);
+    border-left-color: var(--accent-warning);
+    color: var(--text-primary);
+}
+
+.notification.warning .notification-icon {
+    color: var(--accent-warning);
+    font-size: 18px;
+}
+
+/* Success Notification */
+.notification.success {
+    background: linear-gradient(135deg, 
+        rgba(46, 204, 113, 0.1) 0%, 
+        rgba(39, 174, 96, 0.05) 100%);
+    border-left-color: #2ecc71;
+    color: var(--text-primary);
+}
+
+.notification.success .notification-icon {
+    color: #2ecc71;
+    font-size: 18px;
+}
+
+/* Info Notification */
+.notification.info {
+    background: linear-gradient(135deg, 
+        rgba(74, 158, 255, 0.1) 0%, 
+        rgba(52, 152, 219, 0.05) 100%);
+    border-left-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+.notification.info .notification-icon {
+    color: var(--accent-primary);
+    font-size: 18px;
+}
+
+/* Notification Content */
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-size: 15px;
+}
+
+.notification-message {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+/* Close Button */
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 1;
+    margin-left: 8px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.notification-close:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.notification-close:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 1px;
+    opacity: 1;
+}
+
+/* Loading State with Error Support */
+.loading.error {
+    background: linear-gradient(135deg, 
+        rgba(231, 76, 60, 0.05) 0%, 
+        rgba(192, 57, 43, 0.02) 100%);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.loading.error p {
+    color: #e74c3c;
+}
+
+/* Enhanced Upload Area Error States */
+.upload-area.error {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.05);
+    animation: shake 0.5s ease-in-out;
+}
+
+.upload-area.success {
+    border-color: #2ecc71;
+    background: rgba(46, 204, 113, 0.05);
+}
+
+/* Shake animation for error feedback */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Error state for file input */
+.upload-area.error .upload-text {
+    color: #e74c3c;
+}
+
+.upload-area.error .upload-icon {
+    color: #e74c3c;
+}
+
+/* Accessibility improvements for notifications */
+/* Screen readers will announce notifications with role="alert" immediately */
+
+/* Dark theme adjustments for notifications */
+:root[data-theme="dark"] .notification {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .notification.error {
+    background: linear-gradient(135deg, 
+        rgba(231, 76, 60, 0.15) 0%, 
+        rgba(192, 57, 43, 0.08) 100%);
+}
+
+:root[data-theme="dark"] .notification.warning {
+    background: linear-gradient(135deg, 
+        rgba(243, 156, 18, 0.15) 0%, 
+        rgba(230, 126, 34, 0.08) 100%);
+}
+
+:root[data-theme="dark"] .notification.success {
+    background: linear-gradient(135deg, 
+        rgba(46, 204, 113, 0.15) 0%, 
+        rgba(39, 174, 96, 0.08) 100%);
+}
+
+:root[data-theme="dark"] .notification.info {
+    background: linear-gradient(135deg, 
+        rgba(74, 158, 255, 0.15) 0%, 
+        rgba(52, 152, 219, 0.08) 100%);
+}
+
+/* Mobile responsive notifications */
+@media (max-width: 768px) {
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        transform: translateY(-100%);
+    }
+    
+    .notification.show {
+        transform: translateY(0);
+    }
+}
+
+/* Reduced motion support for notifications */
+@media (prefers-reduced-motion: reduce) {
+    .notification {
+        transition: none;
+    }
+    
+    .upload-area.error {
+        animation: none;
+    }
+}

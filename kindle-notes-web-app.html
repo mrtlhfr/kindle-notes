@@ -680,6 +680,236 @@ button:focus, .btn:focus {
 .note-type-badge {
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+/* ==========================================================================
+   ERROR HANDLING & NOTIFICATIONS
+   ========================================================================== */
+
+/* Error, Warning & Success Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 1.4;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    border-left: 4px solid;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Error Notification */
+.notification.error {
+    background: linear-gradient(135deg, 
+        rgba(231, 76, 60, 0.1) 0%, 
+        rgba(192, 57, 43, 0.05) 100%);
+    border-left-color: #e74c3c;
+    color: var(--text-primary);
+}
+
+.notification.error .notification-icon {
+    color: #e74c3c;
+    font-size: 18px;
+}
+
+/* Warning Notification */
+.notification.warning {
+    background: linear-gradient(135deg, 
+        rgba(243, 156, 18, 0.1) 0%, 
+        rgba(230, 126, 34, 0.05) 100%);
+    border-left-color: var(--accent-warning);
+    color: var(--text-primary);
+}
+
+.notification.warning .notification-icon {
+    color: var(--accent-warning);
+    font-size: 18px;
+}
+
+/* Success Notification */
+.notification.success {
+    background: linear-gradient(135deg, 
+        rgba(46, 204, 113, 0.1) 0%, 
+        rgba(39, 174, 96, 0.05) 100%);
+    border-left-color: #2ecc71;
+    color: var(--text-primary);
+}
+
+.notification.success .notification-icon {
+    color: #2ecc71;
+    font-size: 18px;
+}
+
+/* Info Notification */
+.notification.info {
+    background: linear-gradient(135deg, 
+        rgba(74, 158, 255, 0.1) 0%, 
+        rgba(52, 152, 219, 0.05) 100%);
+    border-left-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+.notification.info .notification-icon {
+    color: var(--accent-primary);
+    font-size: 18px;
+}
+
+/* Notification Content */
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-size: 15px;
+}
+
+.notification-message {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+/* Close Button */
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 1;
+    margin-left: 8px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.notification-close:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.notification-close:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 1px;
+    opacity: 1;
+}
+
+/* Loading State with Error Support */
+.loading.error {
+    background: linear-gradient(135deg, 
+        rgba(231, 76, 60, 0.05) 0%, 
+        rgba(192, 57, 43, 0.02) 100%);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.loading.error p {
+    color: #e74c3c;
+}
+
+/* Enhanced Upload Area Error States */
+.upload-area.error {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.05);
+    animation: shake 0.5s ease-in-out;
+}
+
+.upload-area.success {
+    border-color: #2ecc71;
+    background: rgba(46, 204, 113, 0.05);
+}
+
+/* Shake animation for error feedback */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Error state for file input */
+.upload-area.error .upload-text {
+    color: #e74c3c;
+}
+
+.upload-area.error .upload-icon {
+    color: #e74c3c;
+}
+
+/* Accessibility improvements for notifications */
+/* Screen readers will announce notifications with role="alert" immediately */
+
+/* Dark theme adjustments for notifications */
+:root[data-theme="dark"] .notification {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .notification.error {
+    background: linear-gradient(135deg, 
+        rgba(231, 76, 60, 0.15) 0%, 
+        rgba(192, 57, 43, 0.08) 100%);
+}
+
+:root[data-theme="dark"] .notification.warning {
+    background: linear-gradient(135deg, 
+        rgba(243, 156, 18, 0.15) 0%, 
+        rgba(230, 126, 34, 0.08) 100%);
+}
+
+:root[data-theme="dark"] .notification.success {
+    background: linear-gradient(135deg, 
+        rgba(46, 204, 113, 0.15) 0%, 
+        rgba(39, 174, 96, 0.08) 100%);
+}
+
+:root[data-theme="dark"] .notification.info {
+    background: linear-gradient(135deg, 
+        rgba(74, 158, 255, 0.15) 0%, 
+        rgba(52, 152, 219, 0.08) 100%);
+}
+
+/* Mobile responsive notifications */
+@media (max-width: 768px) {
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        transform: translateY(-100%);
+    }
+    
+    .notification.show {
+        transform: translateY(0);
+    }
+}
+
+/* Reduced motion support for notifications */
+@media (prefers-reduced-motion: reduce) {
+    .notification {
+        transition: none;
+    }
+    
+    .upload-area.error {
+        animation: none;
+    }
+}
     </style>
 </head>
 <body>
@@ -1417,55 +1647,329 @@ class KindleNotesApp {
     }
 
     /**
-     * Handle file upload and processing
+     * Validate file before processing
+     * @param {File} file - File to validate
+     * @returns {Object} Validation result {valid: boolean, error?: string, title?: string}
+     */
+    validateFile(file) {
+        // Check if file exists
+        if (!file) {
+            return {
+                valid: false,
+                error: 'No file was selected. Please choose a file to upload.',
+                title: 'No File Selected'
+            };
+        }
+
+        // File type validation (more comprehensive)
+        const fileName = file.name.toLowerCase();
+        const allowedExtensions = ['.txt'];
+        const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+        
+        if (!hasValidExtension) {
+            return {
+                valid: false,
+                error: `Invalid file type. Please select a .txt file. Your file: "${file.name}"`,
+                title: 'Invalid File Type'
+            };
+        }
+
+        // File size validation (50MB limit)
+        const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+        if (file.size > maxSize) {
+            const fileSizeMB = (file.size / 1024 / 1024).toFixed(1);
+            return {
+                valid: false,
+                error: `File too large (${fileSizeMB}MB). Maximum file size is 50MB. Please try with a smaller file.`,
+                title: 'File Size Limit Exceeded'
+            };
+        }
+
+        // Minimum file size check (empty file detection)
+        if (file.size === 0) {
+            return {
+                valid: false,
+                error: 'The selected file is empty. Please choose a file that contains Kindle notes.',
+                title: 'Empty File'
+            };
+        }
+
+        // Very small file warning (likely not a proper Kindle notes file)
+        if (file.size < 100) { // Less than 100 bytes
+            return {
+                valid: false,
+                error: 'This file appears to be too small to contain Kindle notes. A typical My Clippings.txt file should be at least a few hundred bytes.',
+                title: 'File Too Small'
+            };
+        }
+
+        return { valid: true };
+    }
+
+    /**
+     * Validate file content format
+     * @param {string} content - File content to validate
+     * @returns {Object} Validation result {valid: boolean, error?: string, title?: string, warning?: string}
+     */
+    validateContent(content) {
+        // Check if content exists and is not just whitespace
+        if (!content || content.trim().length === 0) {
+            return {
+                valid: false,
+                error: 'The file appears to be empty or contains only whitespace. Please check that your My Clippings.txt file contains notes.',
+                title: 'Empty File Content'
+            };
+        }
+
+        // Check for proper Kindle format (contains separators)
+        const separators = content.match(/==========/g);
+        if (!separators || separators.length === 0) {
+            return {
+                valid: false,
+                error: 'This file does not appear to be a valid Kindle My Clippings.txt file. Kindle notes should be separated by "==========" lines.',
+                title: 'Invalid File Format'
+            };
+        }
+
+        // Check for reasonable content structure
+        const lines = content.split('\n').filter(line => line.trim().length > 0);
+        if (lines.length < 3) {
+            return {
+                valid: false,
+                error: 'This file does not contain enough content to be a valid Kindle notes file. Each note should have at least a title, metadata, and content.',
+                title: 'Insufficient Content'
+            };
+        }
+
+        // Look for typical Kindle patterns
+        const hasKindlePatterns = /- Your (Highlight|Note|Bookmark) on/i.test(content) ||
+                                /Added on \w+day,/i.test(content) ||
+                                /Location \d+/i.test(content);
+
+        if (!hasKindlePatterns) {
+            return {
+                valid: true,
+                warning: 'This file may not be in the standard Kindle format, but we\'ll try to parse it. If you get unexpected results, please ensure you\'re using the My Clippings.txt file from your Kindle device.'
+            };
+        }
+
+        return { valid: true };
+    }
+
+    /**
+     * Handle file upload and processing with comprehensive error handling
      * @param {File} file - Selected file
      */
     async handleFile(file) {
         const totalStartTime = performance.now();
-        console.log(`📁 Processing file: ${file.name} (${(file.size / 1024).toFixed(1)}KB)`);
         
-        if (!file.name.toLowerCase().endsWith('.txt')) {
-            alert('Please select a .txt file');
+        // Clear any existing notifications
+        this.clearNotifications();
+        
+        // Log file info for debugging
+        if (file) {
+            console.log(`📁 Processing file: ${file.name} (${(file.size / 1024).toFixed(1)}KB)`);
+        }
+
+        // Step 1: File validation
+        const fileValidation = this.validateFile(file);
+        if (!fileValidation.valid) {
+            this.showError(fileValidation.error, fileValidation.title);
             return;
         }
 
+        // Show loading state
         this.showLoading();
 
         try {
+            // Step 2: Read file content
             const readStartTime = performance.now();
             const content = await this.readFile(file);
             const readTime = performance.now() - readStartTime;
             console.log(`📖 File read in ${readTime.toFixed(2)}ms`);
-            
+
+            // Step 3: Content validation
+            const contentValidation = this.validateContent(content);
+            if (!contentValidation.valid) {
+                this.hideLoading();
+                this.showError(contentValidation.error, contentValidation.title);
+                return;
+            }
+
+            // Show warning if content format is questionable
+            if (contentValidation.warning) {
+                this.showWarning(contentValidation.warning, 'Format Warning');
+            }
+
+            // Step 4: Parse the content
+            const parseStartTime = performance.now();
             this.parser.parseFile(content);
-            
+            const parseTime = performance.now() - parseStartTime;
+            console.log(`⚡ Parsing completed in ${parseTime.toFixed(2)}ms`);
+
+            // Step 5: Validate parsing results
+            if (this.parser.notes.length === 0) {
+                this.hideLoading();
+                this.showError(
+                    'No valid Kindle notes were found in this file. Please ensure you\'re using the correct "My Clippings.txt" file from your Kindle device. The file should contain highlights, notes, or bookmarks separated by "==========" lines.',
+                    'No Notes Found'
+                );
+                
+                // Provide helpful guidance
+                setTimeout(() => {
+                    this.showInfo(
+                        'To export your notes: Connect your Kindle to your computer, navigate to the "documents" folder, and copy the "My Clippings.txt" file.',
+                        'How to Get Your Notes',
+                        10000
+                    );
+                }, 1000);
+                return;
+            }
+
+            // Step 6: Display results
             const displayStartTime = performance.now();
             this.displayResults();
             const displayTime = performance.now() - displayStartTime;
             console.log(`🎨 UI rendered in ${displayTime.toFixed(2)}ms`);
-            
+
+            // Step 7: Success notification and performance logging
             const totalTime = performance.now() - totalStartTime;
-            console.log(`🏁 Total processing time: ${totalTime.toFixed(2)}ms`);
-            console.log(`📊 Performance breakdown: Read(${((readTime/totalTime)*100).toFixed(1)}%) + Parse(${(((window.lastParsingStats?.processingTime || 0)/totalTime)*100).toFixed(1)}%) + Display(${((displayTime/totalTime)*100).toFixed(1)}%)`);
+            const stats = this.parser.getStatistics();
             
+            this.showSuccess(
+                `Successfully parsed ${stats.totalNotes} notes from ${stats.totalBooks} books! Found ${stats.highlights} highlights, ${stats.notes} notes, and ${stats.bookmarks} bookmarks.`,
+                'File Processed Successfully'
+            );
+
+            // Performance logging
+            console.log(`🏁 Total processing time: ${totalTime.toFixed(2)}ms`);
+            console.log(`📊 Performance breakdown: Read(${((readTime/totalTime)*100).toFixed(1)}%) + Parse(${((parseTime/totalTime)*100).toFixed(1)}%) + Display(${((displayTime/totalTime)*100).toFixed(1)}%)`);
+            
+            // Update page title for accessibility
+            this.updatePageTitle(`Kindle Notes Parser - ${stats.totalBooks} Books Loaded`);
+
         } catch (error) {
-            console.error('❌ File processing failed:', error);
-            alert('Error reading file: ' + error.message);
             this.hideLoading();
+            console.error('❌ File processing failed:', error);
+            
+            // Enhanced error handling with specific error types
+            if (error.name === 'NotReadableError' || error.message.includes('read')) {
+                this.showError(
+                    'Unable to read the selected file. The file might be corrupted or in use by another application.',
+                    'File Reading Error'
+                );
+            } else if (error.name === 'SecurityError') {
+                this.showError(
+                    'Security restrictions prevent reading this file. Please try selecting the file again.',
+                    'Security Error'
+                );
+            } else if (error.name === 'AbortError') {
+                this.showWarning('File reading was cancelled.', 'Operation Cancelled');
+            } else {
+                // Generic error with helpful suggestions
+                this.showError(
+                    `An unexpected error occurred while processing your file: ${error.message}. Please try again, or contact support if the problem persists.`,
+                    'Processing Error'
+                );
+            }
+
+            // Provide recovery suggestions
+            setTimeout(() => {
+                this.showInfo(
+                    'Try these steps: 1) Ensure the file is not open in another program, 2) Check that the file is a valid .txt file, 3) Try with a smaller file to test.',
+                    'Troubleshooting Tips',
+                    8000
+                );
+            }, 2000);
         }
     }
 
     /**
-     * Read file content as text
+     * Read file content as text with enhanced error handling
      * @param {File} file - File to read
      * @returns {Promise<string>} File content
      */
     readFile(file) {
         return new Promise((resolve, reject) => {
+            // Validate file parameter
+            if (!file) {
+                reject(new Error('No file provided for reading'));
+                return;
+            }
+
             const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.onerror = (e) => reject(new Error('Failed to read file'));
-            reader.readAsText(file, 'UTF-8');
+            
+            // Set up event handlers
+            reader.onload = (e) => {
+                const content = e.target.result;
+                
+                // Validate that we got content
+                if (content === null || content === undefined) {
+                    reject(new Error('File content is empty or unreadable'));
+                    return;
+                }
+                
+                resolve(content);
+            };
+
+            reader.onerror = (e) => {
+                // Provide more specific error messages based on the error
+                const error = e.target.error;
+                let errorMessage = 'Failed to read file';
+                
+                if (error) {
+                    switch (error.name) {
+                        case 'NotReadableError':
+                            errorMessage = 'The file could not be read. It may be corrupted or locked by another application.';
+                            break;
+                        case 'SecurityError':
+                            errorMessage = 'Access to the file was denied for security reasons.';
+                            break;
+                        case 'NotFoundError':
+                            errorMessage = 'The file could not be found.';
+                            break;
+                        case 'AbortError':
+                            errorMessage = 'File reading was aborted.';
+                            break;
+                        default:
+                            errorMessage = `File reading failed: ${error.message || 'Unknown error'}`;
+                    }
+                }
+                
+                reject(new Error(errorMessage));
+            };
+
+            reader.onabort = () => {
+                reject(new Error('File reading was cancelled'));
+            };
+
+            // Set timeout for large files (30 second timeout)
+            const timeout = setTimeout(() => {
+                reader.abort();
+                reject(new Error('File reading timed out. The file may be too large or corrupted.'));
+            }, 30000);
+
+            // Clear timeout on success or error
+            const originalOnload = reader.onload;
+            const originalOnerror = reader.onerror;
+            
+            reader.onload = (e) => {
+                clearTimeout(timeout);
+                originalOnload(e);
+            };
+            
+            reader.onerror = (e) => {
+                clearTimeout(timeout);
+                originalOnerror(e);
+            };
+
+            // Start reading the file as UTF-8 text
+            try {
+                reader.readAsText(file, 'UTF-8');
+            } catch (error) {
+                clearTimeout(timeout);
+                reject(new Error(`Failed to start reading file: ${error.message}`));
+            }
         });
     }
 
@@ -1671,7 +2175,10 @@ class KindleNotesApp {
         const highlightsText = highlights.map(n => n.content.trim()).join('\n\n');
 
         if (!highlightsText) {
-            alert('No highlights found in this book.');
+            this.showWarning(
+                `No highlights were found in "${bookTitle}". This book may only contain notes or bookmarks.`,
+                'No Highlights Available'
+            );
             return;
         }
 
@@ -1685,8 +2192,12 @@ class KindleNotesApp {
                 btn.innerHTML = originalText;
                 btn.classList.remove('copy-success');
             }, 2000);
-        }).catch(() => {
-            alert('Could not copy to clipboard. Please select and copy the text manually.');
+        }).catch((error) => {
+            console.error('Clipboard copy failed:', error);
+            this.showError(
+                'Could not copy to clipboard. This may be due to browser security restrictions. Please manually select and copy the text.',
+                'Clipboard Error'
+            );
         });
     }
 
@@ -1700,11 +2211,21 @@ class KindleNotesApp {
             .join('\n\n---\n\n');
 
         if (!allHighlights) {
-            alert('No highlights found to export.');
+            this.showWarning(
+                'No highlights were found in your notes. Your file may contain only notes and bookmarks, which are not included in the highlights export.',
+                'No Highlights to Export'
+            );
             return;
         }
 
         this.downloadTextFile('all_kindle_highlights.txt', allHighlights);
+        
+        // Show success notification
+        const highlightCount = this.parser.notes.filter(n => n.noteType === 'Highlight' && n.content.trim()).length;
+        this.showSuccess(
+            `Successfully exported ${highlightCount} highlights to "all_kindle_highlights.txt"`,
+            'Export Complete'
+        );
     }
 
     /**
@@ -1852,6 +2373,180 @@ class KindleNotesApp {
      */
     updatePageTitle(title) {
         document.title = title;
+    }
+
+    /**
+     * Show error notification with enhanced UX
+     * @param {string} message - Error message to display
+     * @param {string} title - Error title (optional)
+     * @param {number} duration - Auto-dismiss duration in ms (0 = no auto-dismiss)
+     */
+    showError(message, title = 'Error', duration = 8000) {
+        this.showNotification('error', '❌', title, message, duration);
+        this.announceToScreenReader(`Error: ${title}. ${message}`, 'assertive');
+        
+        // Add error state to upload area briefly
+        const uploadArea = document.getElementById('uploadArea');
+        if (uploadArea) {
+            uploadArea.classList.add('error');
+            setTimeout(() => uploadArea.classList.remove('error'), 3000);
+        }
+    }
+
+    /**
+     * Show warning notification
+     * @param {string} message - Warning message to display
+     * @param {string} title - Warning title (optional)
+     * @param {number} duration - Auto-dismiss duration in ms (0 = no auto-dismiss)
+     */
+    showWarning(message, title = 'Warning', duration = 6000) {
+        this.showNotification('warning', '⚠️', title, message, duration);
+        this.announceToScreenReader(`Warning: ${title}. ${message}`, 'polite');
+    }
+
+    /**
+     * Show success notification
+     * @param {string} message - Success message to display  
+     * @param {string} title - Success title (optional)
+     * @param {number} duration - Auto-dismiss duration in ms (0 = no auto-dismiss)
+     */
+    showSuccess(message, title = 'Success', duration = 4000) {
+        this.showNotification('success', '✅', title, message, duration);
+        this.announceToScreenReader(`Success: ${title}. ${message}`, 'polite');
+        
+        // Add success state to upload area briefly
+        const uploadArea = document.getElementById('uploadArea');
+        if (uploadArea) {
+            uploadArea.classList.add('success');
+            setTimeout(() => uploadArea.classList.remove('success'), 2000);
+        }
+    }
+
+    /**
+     * Show info notification
+     * @param {string} message - Info message to display
+     * @param {string} title - Info title (optional)
+     * @param {number} duration - Auto-dismiss duration in ms (0 = no auto-dismiss)
+     */
+    showInfo(message, title = 'Info', duration = 5000) {
+        this.showNotification('info', 'ℹ️', title, message, duration);
+        this.announceToScreenReader(`${title}. ${message}`, 'polite');
+    }
+
+    /**
+     * Create and show a notification
+     * @param {string} type - Notification type (error, warning, success, info)
+     * @param {string} icon - Icon to display
+     * @param {string} title - Notification title
+     * @param {string} message - Notification message
+     * @param {number} duration - Auto-dismiss duration in ms (0 = no auto-dismiss)
+     */
+    showNotification(type, icon, title, message, duration = 5000) {
+        // Remove any existing notifications of the same type
+        const existingNotifications = document.querySelectorAll(`.notification.${type}`);
+        existingNotifications.forEach(notification => notification.remove());
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.setAttribute('role', 'alert');
+        notification.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+
+        // Create notification content
+        notification.innerHTML = `
+            <div class="notification-icon" aria-hidden="true">${icon}</div>
+            <div class="notification-content">
+                <div class="notification-title">${this.escapeHtml(title)}</div>
+                <div class="notification-message">${this.escapeHtml(message)}</div>
+            </div>
+            <button class="notification-close" aria-label="Dismiss notification" type="button">×</button>
+        `;
+
+        // Add to DOM
+        document.body.appendChild(notification);
+
+        // Show animation
+        requestAnimationFrame(() => {
+            notification.classList.add('show');
+        });
+
+        // Set up close button
+        const closeBtn = notification.querySelector('.notification-close');
+        const closeNotification = () => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        };
+
+        closeBtn.addEventListener('click', closeNotification);
+
+        // Auto-dismiss if duration is set
+        if (duration > 0) {
+            setTimeout(() => {
+                if (notification.classList.contains('show')) {
+                    closeNotification();
+                }
+            }, duration);
+        }
+
+        // Keyboard support
+        closeBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                closeNotification();
+            }
+        });
+
+        return notification;
+    }
+
+    /**
+     * Clear all notifications
+     */
+    clearNotifications() {
+        const notifications = document.querySelectorAll('.notification');
+        notifications.forEach(notification => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        });
+    }
+
+    /**
+     * Handle and format error objects with detailed information
+     * @param {Error|string} error - Error object or message
+     * @param {string} context - Context where error occurred
+     */
+    handleError(error, context = 'Unknown') {
+        console.error(`❌ Error in ${context}:`, error);
+        
+        let message = 'An unexpected error occurred.';
+        let title = 'Error';
+        
+        if (typeof error === 'string') {
+            message = error;
+        } else if (error instanceof Error) {
+            message = error.message;
+            
+            // Provide more specific error titles based on error type
+            if (error.name === 'TypeError') {
+                title = 'Type Error';
+            } else if (error.name === 'ReferenceError') {
+                title = 'Reference Error';
+            } else if (error.name === 'SyntaxError') {
+                title = 'Syntax Error';
+            } else {
+                title = error.name || 'Error';
+            }
+        }
+        
+        this.showError(message, title);
     }
 
     /**
