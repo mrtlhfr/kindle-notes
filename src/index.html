@@ -6,10 +6,12 @@
     <title>Kindle Notes Parser - Web App</title>
     
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="console.warn('jsPDF failed to load from CDN')"></script>
     
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -71,9 +73,22 @@
                     <option value="Bookmark">Bookmarks Only</option>
                     <option value="Note">Notes Only</option>
                 </select>
-                <button class="btn" 
-                        id="exportAllBtn"
-                        aria-describedby="export-help">Export All</button>
+                <div class="export-dropdown">
+                    <button class="btn export-main" 
+                            id="exportAllBtn"
+                            aria-label="Export all highlights in various formats"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        📋 Export All ▼
+                    </button>
+                    <div class="export-menu" id="export-all-global" style="display: none;" role="menu">
+                        <button id="export-all-txt" class="export-option" role="menuitem">📄 Export All as TXT</button>
+                        <button id="export-all-markdown" class="export-option" role="menuitem">📝 Export All as Markdown</button>
+                        <button id="export-all-csv" class="export-option" role="menuitem">📊 Export All as CSV</button>
+                        <button id="export-all-json" class="export-option" role="menuitem">💾 Export All as JSON</button>
+                        <button id="export-all-pdf" class="export-option" role="menuitem">📕 Export All as PDF</button>
+                    </div>
+                </div>
                 <button class="btn btn-secondary" 
                         id="resetBtn"
                         aria-label="Reset and clear all filters">Reset</button>

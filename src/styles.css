@@ -891,3 +891,277 @@ button:focus, .btn:focus {
         animation: none;
     }
 }
+
+/* ==========================================================================
+   ENHANCED EXPORT FUNCTIONALITY
+   ========================================================================== */
+
+/* Book Card Layout Updates */
+.book-card {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+/* Elevate book card when export menu is open */
+.book-card:has(.export-menu[style*="block"]),
+.book-card.export-menu-open {
+    z-index: 10000;
+}
+
+/* Global export dropdown */
+#export-all-global {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-strong);
+    z-index: 9999;
+    min-width: 180px;
+    margin-top: 5px;
+    display: none;
+}
+
+#export-all-global .export-option {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-radius: 0;
+}
+
+#export-all-global .export-option:first-child {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+#export-all-global .export-option:last-child {
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+#export-all-global .export-option:hover,
+#export-all-global .export-option:focus {
+    background: var(--hover-color);
+    outline: none;
+}
+
+#export-all-global .export-option:active {
+    background: var(--accent-color);
+    color: white;
+}
+
+.global-export-container {
+    position: relative;
+    display: inline-block;
+}
+
+.book-content {
+    flex: 1;
+    cursor: pointer;
+    padding: 20px;
+}
+
+.book-actions {
+    padding: 10px 20px 20px 20px;
+    border-top: 1px solid var(--border-primary);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+:root[data-theme="dark"] .book-actions {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Notes Header Layout */
+.notes-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.notes-header-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.notes-header-actions {
+    flex-shrink: 0;
+}
+
+/* Export Dropdown Styles */
+.export-dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 1000;
+}
+
+.export-main {
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    position: relative;
+}
+
+.export-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--card-background);
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    min-width: 200px;
+    margin-top: 5px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.export-menu[style*="block"] {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.export-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.9em;
+    border-radius: 0;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--border-secondary);
+}
+
+.export-menu button:last-child {
+    border-bottom: none;
+}
+
+.export-menu button:hover {
+    background: var(--accent-primary);
+    color: white;
+    transform: translateX(5px);
+}
+
+.export-menu button:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: -2px;
+    background: var(--accent-primary);
+    color: white;
+}
+
+.export-menu button:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.export-menu button:last-child {
+    border-radius: 0 0 12px 12px;
+}
+
+.export-menu button:first-child:last-child {
+    border-radius: 12px;
+}
+
+/* Dark theme adjustments for export menu */
+:root[data-theme="dark"] .export-menu {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-color: var(--border-primary);
+}
+
+:root[data-theme="dark"] .export-menu button {
+    border-color: var(--border-secondary);
+}
+
+/* Export icons and spacing */
+.export-menu button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Responsive design for export menus */
+@media (max-width: 768px) {
+    .notes-header-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .notes-header-actions {
+        width: 100%;
+    }
+    
+    .export-dropdown {
+        width: 100%;
+    }
+    
+    .export-main {
+        width: 100%;
+    }
+    
+    .export-menu {
+        right: 0;
+        left: 0;
+        min-width: auto;
+    }
+    
+    .book-actions {
+        text-align: center;
+    }
+}
+
+/* Animation for export dropdown arrow */
+.export-main[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+}
+
+.export-main::after {
+    transition: transform 0.2s ease;
+}
+
+/* Enhanced hover effects for book cards with export */
+.book-card:hover .book-actions {
+    background: rgba(74, 158, 255, 0.05);
+}
+
+:root[data-theme="dark"] .book-card:hover .book-actions {
+    background: rgba(74, 158, 255, 0.1);
+}
+
+/* Ensure export menus stay above other elements */
+.export-menu {
+    z-index: 1001;
+}
+
+/* Touch target improvements for mobile */
+@media (pointer: coarse) {
+    .export-menu button {
+        padding: 16px;
+        font-size: 1em;
+    }
+    
+    .export-main {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}

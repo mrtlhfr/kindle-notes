@@ -14,5 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create and start the app
     window.app = new KindleNotesApp();
     
+    // Check PDF library availability
+    if (typeof window.jspdf === 'undefined') {
+        console.warn('⚠️ PDF export library (jsPDF) not loaded. PDF export will use dynamic loading.');
+    } else {
+        console.log('📕 PDF export library loaded successfully');
+    }
+    
     console.log('✅ Application ready! Upload your My Clippings.txt file to get started.');
 });
